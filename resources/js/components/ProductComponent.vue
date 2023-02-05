@@ -14,9 +14,10 @@
             <td>{{ item.name }}</td>
             <td>{{ item.description }}</td>
             <td>{{ item.stock }}</td>
-            <td>{{ item.price }}</td>
+            <td>Rp. {{ item.price }}</td>
             <td>
-                <button-comp @emitClick="addCart(index)" text="Add to Cart" class="add" warna="biruMuda"/> 
+                <button-comp @emitClick="addCart(index)" text="Add to Cart" class="add" warna="biruMuda"/>
+                <button-comp @emitClick="addAll(index)" text="Add All" class="all" warna="biruMuda"/> 
             </td>
         </tr>
         </tbody>
@@ -42,7 +43,11 @@ export default {
     methods:{
         addCart(index){
             this.$emit('emitAdd', index)
-            }
+            },
+        addAll(index){
+            this.$emit('emitAddAll',index)
+        }
+        
     }
 
 }

@@ -12,9 +12,10 @@
         <tr v-for="(item, index) in dataCart" :key="index">
             <td>{{ item.name }}</td>
             <td>{{ item.quantity }}</td>
-            <td>{{ item.price }}</td>
+            <td>Rp. {{ item.price }}</td>
             <td>
-                <button-comp @emitClick="deleteCart(index)" text="Delete" warna="merah"/>
+                <button-comp @emitClick="deleteOne(index)" text="-1" warna="merah"/>
+                <button-comp @emitClick="deleteCart(index)" text="Delete All" warna="merah"/>
             </td>
         </tr>
         </tbody>
@@ -41,6 +42,9 @@ export default {
     methods:{
         deleteCart(index){
             this.$emit('deleteElement', index)
+            },
+        deleteOne(index){
+            this.$emit('delOneElement', index)
             }
     }
 }

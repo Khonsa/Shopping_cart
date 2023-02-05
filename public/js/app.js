@@ -5356,6 +5356,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     deleteCart: function deleteCart(index) {
       this.$emit('deleteElement', index);
+    },
+    deleteOne: function deleteOne(index) {
+      this.$emit('delOneElement', index);
     }
   }
 });
@@ -5380,17 +5383,17 @@ __webpack_require__.r(__webpack_exports__);
         name: "Indomie Goreng Rendang",
         description: "Masakan instan terenak di dunia",
         stock: 10,
-        price: "Rp. 3900"
+        price: 3900
       }, {
         name: "Mie Gelas Rendang",
         description: "Mie instan khusus anak kosan",
         stock: 3,
-        price: "Rp. 1500"
+        price: 1500
       }, {
         name: "Bakmi Mewah",
         description: "Kalau anak kosan jangan macam2 deh",
         stock: 80,
-        price: "Rp. 10000"
+        price: 10000
       }],
       listcart: []
     };
@@ -5399,6 +5402,7 @@ __webpack_require__.r(__webpack_exports__);
     addCart: function addCart(index) {
       var _this = this;
       var id_add = document.getElementsByClassName("add")[index];
+      var id_all = document.getElementsByClassName("all")[index];
       if (this.list[index].stock > 0) {
         this.list[index].stock -= 1;
         if (this.listcart.find(function (listcartData) {
@@ -5407,10 +5411,10 @@ __webpack_require__.r(__webpack_exports__);
           var indexListcart = this.listcart.map(function (ind) {
             return ind.name;
           }).indexOf(this.list[index].name);
-          var pricelist = Number(this.list[index].price.replace('Rp. ', ''));
-          var pricecart = Number(this.listcart[indexListcart].price.replace('Rp. ', ''));
+          var pricelist = this.list[index].price;
+          var pricecart = this.listcart[indexListcart].price;
           this.listcart[indexListcart].quantity = this.listcart[indexListcart].quantity + 1;
-          this.listcart[indexListcart].price = 'Rp. ' + String(pricecart + pricelist);
+          this.listcart[indexListcart].price = pricecart + pricelist;
         } else {
           var newlistcart = {
             name: this.list[index].name,
@@ -5421,7 +5425,55 @@ __webpack_require__.r(__webpack_exports__);
         }
         if (this.list[index].stock == 0) {
           id_add.style.visibility = "hidden";
+          id_all.style.visibility = "hidden";
         } else {
+          id_add.style.visibility = "visible";
+          id_all.style.visibility = "visible";
+        }
+      } else {
+        this.list[index].stock = 0;
+      }
+      var total_bayar = 0;
+      for (var i = 0; i < this.listcart.length; i++) {
+        total_bayar = total_bayar + this.listcart[i].price;
+      }
+      document.getElementById("total").innerHTML = "Rp. " + total_bayar;
+    },
+    addAll: function addAll(index) {
+      var _this2 = this;
+      /*deklarasi class button = all dan add*/
+      var id_all = document.getElementsByClassName("all")[index];
+      var id_add = document.getElementsByClassName("add")[index];
+      /*deklarasi harga dari tabel list ke type number*/
+      var pricelist = this.list[index].price;
+      /*Cek tabel listcartnya ada data atau tidak*/
+      if (this.list[index].stock > 0) {
+        /*Kalau adat data cari kolom nama dari tabel listcart yg sama dgn tabel list*/
+        if (this.listcart.find(function (listcartData) {
+          return listcartData.name === _this2.list[index].name;
+        })) {
+          var indexListcart = this.listcart.map(function (ind) {
+            return ind.name;
+          }).indexOf(this.list[index].name);
+          var pricecart = this.listcart[indexListcart].price;
+          this.listcart[indexListcart].quantity = this.listcart[indexListcart].quantity + this.list[index].stock;
+          this.listcart[indexListcart].price = pricecart + pricelist;
+          this.list[index].stock = 0;
+        } else {
+          /*Kalau tidak ada tambah data baru pada tabel listcart*/
+          var newlistcart = {
+            name: this.list[index].name,
+            quantity: this.list[index].stock,
+            price: this.list[index].stock * pricelist
+          };
+          this.listcart.push(newlistcart);
+          this.list[index].stock = 0;
+        }
+        if (this.list[index].stock == 0) {
+          id_all.style.visibility = "hidden";
+          id_add.style.visibility = "hidden";
+        } else {
+          id_all.style.visibility = "visible";
           id_add.style.visibility = "visible";
         }
       } else {
@@ -5429,7 +5481,8 @@ __webpack_require__.r(__webpack_exports__);
       }
       var total_bayar = 0;
       for (var i = 0; i < this.listcart.length; i++) {
-        total_bayar = total_bayar + Number(this.listcart[i].price.replace('Rp. ', ''));
+        var dataPriceCart = this.listcart[i].price;
+        total_bayar = total_bayar + dataPriceCart;
       }
       document.getElementById("total").innerHTML = "Rp. " + total_bayar;
     },
@@ -5437,16 +5490,36 @@ __webpack_require__.r(__webpack_exports__);
       var indexList = this.list.map(function (ind) {
         return ind.name;
       }).indexOf(this.listcart[index].name);
-      console.log(indexList);
       this.list[indexList].stock += this.listcart[index].quantity;
       var tot_temp = Number(document.getElementById("total").innerHTML.replace('Rp. ', ''));
-      tot_temp -= Number(this.listcart[index].price.replace('Rp. ', ''));
-      console.log(tot_temp);
+      tot_temp -= this.listcart[index].price;
       document.getElementById("total").innerHTML = "Rp. " + tot_temp;
       this.listcart.splice(index, 1);
       var id_add = document.getElementsByClassName("add")[indexList];
+      var id_all = document.getElementsByClassName("all")[indexList];
       if (id_add.style.visibility = "hidden") {
         id_add.style.visibility = "visible";
+        id_all.style.visibility = "visible";
+      }
+    },
+    delOne: function delOne(index) {
+      var indexList = this.list.map(function (ind) {
+        return ind.name;
+      }).indexOf(this.listcart[index].name);
+      this.list[indexList].stock += 1;
+      this.listcart[index].quantity -= 1;
+      this.listcart[index].price -= this.list[indexList].price;
+      var tot_temp = Number(document.getElementById("total").innerHTML.replace('Rp. ', ''));
+      tot_temp -= this.list[indexList].price;
+      document.getElementById("total").innerHTML = "Rp. " + tot_temp;
+      if (this.listcart[index].quantity == 0) {
+        this.listcart.splice(index, 1);
+      }
+      var id_add = document.getElementsByClassName("add")[indexList];
+      var id_all = document.getElementsByClassName("all")[indexList];
+      if (id_add.style.visibility = "hidden") {
+        id_add.style.visibility = "visible";
+        id_all.style.visibility = "visible";
       }
     },
     checkout: function checkout() {
@@ -5503,6 +5576,9 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     addCart: function addCart(index) {
       this.$emit('emitAdd', index);
+    },
+    addAll: function addAll(index) {
+      this.$emit('emitAddAll', index);
     }
   }
 });
@@ -5587,9 +5663,19 @@ var render = function render() {
   }, [_vm._m(0), _vm._v(" "), _c("tbody", _vm._l(_vm.dataCart, function (item, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_c("button-comp", {
+    }, [_c("td", [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.quantity))]), _vm._v(" "), _c("td", [_vm._v("Rp. " + _vm._s(item.price))]), _vm._v(" "), _c("td", [_c("button-comp", {
       attrs: {
-        text: "Delete",
+        text: "-1",
+        warna: "merah"
+      },
+      on: {
+        emitClick: function emitClick($event) {
+          return _vm.deleteOne(index);
+        }
+      }
+    }), _vm._v(" "), _c("button-comp", {
+      attrs: {
+        text: "Delete All",
         warna: "merah"
       },
       on: {
@@ -5648,7 +5734,8 @@ var render = function render() {
       theadColor: "kuning"
     },
     on: {
-      emitAdd: _vm.addCart
+      emitAdd: _vm.addCart,
+      emitAddAll: _vm.addAll
     }
   })], 1), _vm._v(" "), _c("div", {
     staticClass: "cart"
@@ -5664,7 +5751,8 @@ var render = function render() {
       dataCart: _vm.listcart
     },
     on: {
-      deleteElement: _vm.deleteCart
+      deleteElement: _vm.deleteCart,
+      delOneElement: _vm.delOne
     }
   }), _vm._v(" "), _c("button-comp", {
     attrs: {
@@ -5704,7 +5792,7 @@ var render = function render() {
   }, [_vm._m(0)]), _vm._v(" "), _c("tbody", _vm._l(_vm.listProduct, function (item, index) {
     return _c("tr", {
       key: index
-    }, [_c("td", [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.description))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.price))]), _vm._v(" "), _c("td", [_c("button-comp", {
+    }, [_c("td", [_vm._v(_vm._s(item.name))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.description))]), _vm._v(" "), _c("td", [_vm._v(_vm._s(item.stock))]), _vm._v(" "), _c("td", [_vm._v("Rp. " + _vm._s(item.price))]), _vm._v(" "), _c("td", [_c("button-comp", {
       staticClass: "add",
       attrs: {
         text: "Add to Cart",
@@ -5713,6 +5801,17 @@ var render = function render() {
       on: {
         emitClick: function emitClick($event) {
           return _vm.addCart(index);
+        }
+      }
+    }), _vm._v(" "), _c("button-comp", {
+      staticClass: "all",
+      attrs: {
+        text: "Add All",
+        warna: "biruMuda"
+      },
+      on: {
+        emitClick: function emitClick($event) {
+          return _vm.addAll(index);
         }
       }
     })], 1)]);
