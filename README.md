@@ -21,8 +21,8 @@ or
 #### Linux
     cp .env.example .env
 3. Run this command in a command prompt or terminal for install the packages installed in composer
-`composer install`
+    composer install
 5. After successfully creating the .env file, then run the following command
     php artisan key:generate
 7. The last, you can run this app with this command
-`php artisan serve`
+    php artisan serve
