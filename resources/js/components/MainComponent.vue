@@ -1,60 +1,17 @@
 <template>
     <div class="container">
         <div class="product">
-            <h1>Semua Produk</h1>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Stock</th>
-                    <th>Price</th>
-                    <th>  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(item, index) in list" :key="index">
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.stock }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>
-                    <button type="button" class="btn btn-primary add" @click="addCart(index)">Add to cart</button>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <title-comp styleTitle="underlineStyle" teks="Semua Produk"/>
+            <product :listProduct="list" @emitAdd="addCart" theadColor="kuning"/>
         </div>
+
         <div class="cart">
-            <h1>Keranjang Belanja</h1>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                    <th>  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="(item, index) in listcart" :key="index">
-                    <td>{{ item.name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>{{ item.price }}</td>
-                    <td>
-                    <button class="btn btn-danger" @click="deleteCart(index)">Delete</button>
-                    </td>
-                </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td>Total:</td>
-                        <td> </td>
-                        <td id="total">Rp. 0</td>
-                    </tr>
-                </tfoot>
-            </table>
-            <button class="btn btn-success" @click="checkout()">Checkout</button>
+            <title-comp styleTitle="commonStyle backgndJudul" teks="Keranjang Belanja"/>
+            <div class="isiCart">
+                <p> Jika sudah selesai berbelanja silahkan klik tombol checkout untuk membayar</p>
+                <cart :dataCart="listcart" @deleteElement="deleteCart"/>
+                <button-comp @emitClick="checkout" text="Checkout" warna="hijau"/>
+            </div>
         </div>
     </div>
 </template>

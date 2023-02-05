@@ -7,6 +7,22 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+.product {
+    margin: 20px auto;
+}
+
+h1 {
+    margin: 0;
+}
+
+.isiCart {
+    background: white;
+    border: 2px solid white;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding: 10px;
+}
+
 .container {
     width: 100%;
     margin: 50px auto;
