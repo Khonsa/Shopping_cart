@@ -9,4 +9,20 @@
 - Laravel-Mix 6.0.6
 - Vue 2.6.12
 - Vue-Loader 15.10.1
+- Composer 2.4.4
 
+### For running this app :
+1. Make sure you have installed composer and node.js
+2. Create an .env file based on the env.example file, run this command:
+
+#### Windows
+    copy .env.example .env
+or
+#### Linux
+    cp .env.example .env
+3. Run this command in a command prompt or terminal for install the packages installed in composer
+`composer install`
+5. After successfully creating the .env file, then run the following command
+    php artisan key:generate
+7. The last, you can run this app with this command
+`php artisan serve`
