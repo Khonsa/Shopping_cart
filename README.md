@@ -21,7 +21,7 @@ copy .env.example .env
 ```
 ##### Linux
 ```
-    cp .env.example .env
+cp .env.example .env
 ```
 3. Run this command in a command prompt or terminal for install the packages installed in composer
 ```
